@@ -1,9 +1,11 @@
 import { Router } from 'express'
-import Blog from '../models/Blog.js'
-import User from '../models/User.js'
+import { Blog, User } from '../models/index.js'
 import { isValidObjectId } from 'mongoose'
+import commentRouter from './commentRoute.js'
 
 const blogRouter = Router()
+
+blogRouter.use('/:blogId/comment', commentRouter)
 
 blogRouter.post('/', async (req, res) => {
   try {

@@ -1,9 +1,7 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import DB_CONFIG from '../config/db.js'
-import userRouter from './routes/userRoute.js'
-import blogRouter from './routes/blogRoute.js'
-import commentRouter from './routes/commentRoute.js'
+import { blogRouter, userRouter } from './routes/index.js'
 
 const { DB_ID, DB_PW } = DB_CONFIG
 const app = express()
@@ -18,11 +16,8 @@ const server = async () => {
     mongoose.set('debug', true)
     console.log('MongoDB connected')
     app.use(express.json())
-
     app.use('/user', userRouter)
     app.use('/blog', blogRouter)
-    app.use('/blog/:blogId/comment', commentRouter)
-
     app.listen(3000, () => console.log('server listening on port 3000'))
   } catch (err) {
     console.error(err)
