@@ -11,4 +11,4 @@ const commentSchema = new Schema(
 
 const Comment = model('comment', commentSchema)
 
-export default Comment
+export { Comment, commentSchema }

@@ -1,4 +1,4 @@
-import Comment from '../models/Comment.js'
+import { Comment } from '../models/Comment.js'
 import { Router } from 'express'
 import { isValidObjectId } from 'mongoose'
 import { Blog, User } from '../models/index.js'
@@ -27,7 +27,10 @@ commentRouter.post('/', async (req, res) => {
       return res.status(400).send({ err: 'islive is not available' })
 
     const comment = await Comment({ content, blog, user })
-    await comment.save()
+    await Promise.all([
+      await comment.save(),
+      await Blog.updateOne({_id: blogId }, { $push:{comment: comment} })
+    ])
     return res.send(comment)
   } catch (err) {
     console.log(err)
