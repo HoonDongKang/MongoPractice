@@ -49,7 +49,12 @@ userRouter.delete('/:userId', async (req, res) => {
     const { userId } = req.params
     if (!mongoose.isValidObjectId(userId))
       return res.status(400).send({ err: 'Invaid User ID' })
-    const user = await User.findOneAndDelete({ _id: userId })
+    const [user] = await Promise.all([
+      await User.findOneAndDelete({ _id: userId }),
+      await Blog.deleteMany({"user._id":userId}),
+      await Blog.updateMany({"comment.user":userId},{$pull:{comment: {user:userId}}}),
+      await Comment.deleteMany({user:userId})
+    ])
     return res.send({ user })
   } catch (err) {
     console.log(err)

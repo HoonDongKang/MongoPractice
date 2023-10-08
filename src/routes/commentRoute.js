@@ -67,4 +67,22 @@ commentRouter.patch('/:commentId', async (req, res) => {
     return res.status(500).send({ err: err.message })
   }
 })
+
+commentRouter.delete('/:commentId',async(req,res)=>{
+  try {
+    const { commentId } = req.params
+
+    const comment = await Comment.findOneAndDelete({_id: commentId})
+    await Blog.updateOne(
+      {"comment._id":commentId},
+      {$pull:{comment:{ content: { _id: commentId }}}}
+    )
+    return res.send({ comment })
+  } catch (err) {
+    console.log(err)
+    return res.status(500).send({ err: err.message })
+  }
+})
+
+
 export default commentRouter
