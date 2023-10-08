@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { User } from '../models/index.js'
+import { Blog, User } from '../models/index.js'
 import mongoose from 'mongoose'
 
 const userRouter = Router()
@@ -71,7 +71,10 @@ userRouter.put('/:userId', async (req, res) => {
       return res.status(400).send({ err: 'first and last name must be string' })
     let user = await User.findById(userId)
     if (age) user.age = age
-    if (name) user.name = name
+    if (name) { 
+      user.name = name 
+      await Blog.updateMany({"user._id":userId},{ "user.name": name })
+    }
     await user.save()
     // const user = await User.findByIdAndUpdate(
     //   userId,
