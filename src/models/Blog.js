@@ -13,7 +13,7 @@ const BlogSchema = new Schema(
               last: { type: String, required: true },
             }
           },
-    comment:[ commentSchema ]
+    // comment:[ commentSchema ]
   },
   { timestamps: true }
 )
